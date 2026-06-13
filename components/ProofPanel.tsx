@@ -61,7 +61,7 @@ function Section({
 export function ProofPanel({ proof }: { proof: ProofData }) {
   const usedCandidates = proof.candidates.filter((c) => c.relevance === "use");
   const backgroundCandidates = proof.candidates.filter((c) => c.relevance === "background");
-  const ignoredCount = proof.candidates.filter((c) => c.relevance === "ignore").length;
+  const ignoredCandidates = proof.candidates.filter((c) => c.relevance === "ignore");
 
   const sourceItems = [
     ...proof.curatedSources.map((s) => `${s.name} — curated ${s.type}`),
@@ -94,20 +94,20 @@ export function ProofPanel({ proof }: { proof: ProofData }) {
           items={sourceItems}
           empty="No grounding evidence attached."
         />
-        {(backgroundCandidates.length > 0 || ignoredCount > 0) && (
-          <div className="px-4 py-2.5">
-            <div className="text-[13px] text-graphite-faint">
-              {backgroundCandidates.length > 0 && (
-                <span>
-                  Background only (not relied on):{" "}
-                  <span className="text-graphite-muted">
-                    {backgroundCandidates.map((c) => c.id).join(", ")}
-                  </span>
-                  . {" "}
-                </span>
-              )}
-              {ignoredCount > 0 && <span>{ignoredCount} low-relevance candidate(s) ignored.</span>}
-            </div>
+        {(backgroundCandidates.length > 0 || ignoredCandidates.length > 0) && (
+          <div className="space-y-1 px-4 py-2.5">
+            {backgroundCandidates.length > 0 && (
+              <div className="text-[13px] text-graphite-faint">
+                <span className="font-semibold text-graphite-muted">Background only</span> (not
+                relied on): {backgroundCandidates.map((c) => c.id).join(", ")}
+              </div>
+            )}
+            {ignoredCandidates.length > 0 && (
+              <div className="text-[13px] text-graphite-faint">
+                <span className="font-semibold text-coral-ink">Ignored</span> (off-topic / low
+                relevance, not counted): {ignoredCandidates.map((c) => c.id).join(", ")}
+              </div>
+            )}
           </div>
         )}
         <Section icon={Sigma} title="Quantified checks" tone="teal" items={proof.quantChecks} />

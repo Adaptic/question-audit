@@ -16,6 +16,8 @@ import {
   RotateCcw,
   ChevronDown,
   ChevronRight,
+  X,
+  Zap,
 } from "lucide-react";
 
 import { PRESETS } from "@/app/lib/presets";
@@ -43,6 +45,7 @@ import { RubricCheck } from "@/components/RubricCheck";
 import { ExecutiveTransformation } from "@/components/ExecutiveTransformation";
 import { WhyItFails } from "@/components/WhyItFails";
 import { TeamReview } from "@/components/TeamReview";
+import { ExportModal } from "@/components/ExportModal";
 
 const SECTIONS = [
   { id: "sec-audit", label: "1 · Audit" },
@@ -57,6 +60,7 @@ export default function Page() {
   const [hypothesis, setHypothesis] = useState("");
   const [activePreset, setActivePreset] = useState<string | undefined>();
   const [lookupEnabled, setLookupEnabled] = useState(true);
+  const [demoMode, setDemoMode] = useState(false);
 
   const [running, setRunning] = useState(false);
   const [started, setStarted] = useState(false);
@@ -84,8 +88,12 @@ export default function Page() {
   const [comments, setComments] = useState<ReviewComment[]>([]);
   const [simSettings, setSimSettings] = useState<SimSettings>({ mode: "ppv", population: "general" });
 
-  const [copied, setCopied] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [shareClipFail, setShareClipFail] = useState(false);
+  const [exportMd, setExportMd] = useState<string | null>(null);
   const [outputOpen, setOutputOpen] = useState(true);
+  const shareInputRef = useRef<HTMLInputElement>(null);
 
   const abortRef = useRef<AbortController | null>(null);
   const execRef = useRef<HTMLDivElement>(null);
@@ -210,6 +218,9 @@ export default function Page() {
     setRubricBand(null);
     setErrorMsg(null);
     setOutputOpen(true);
+    setShareUrl(null);
+    setShareClipFail(false);
+    setShareCopied(false);
 
     try {
       const res = await fetch("/api/analyze", {
@@ -219,6 +230,7 @@ export default function Page() {
           hypothesis: hypothesis.trim(),
           presetId: activePreset,
           lookupEnabled,
+          demoMode,
         }),
         signal: controller.signal,
       });
@@ -255,7 +267,7 @@ export default function Page() {
     } finally {
       setRunning(false);
     }
-  }, [hypothesis, running, activePreset, lookupEnabled, handleEvent]);
+  }, [hypothesis, running, activePreset, lookupEnabled, demoMode, handleEvent]);
 
   const buildArtifact = useCallback((): AuditArtifact => {
     // In shared mode only the band survives; synthesize a minimal rubric so the
@@ -282,30 +294,26 @@ export default function Page() {
   }, [hypothesis, executive, diff, proof, rubric, rubricBand, comments, simSettings]);
 
   const exportBrief = useCallback(() => {
-    const md = buildExportMarkdown(buildArtifact());
-    const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "clinical-dev-question-audit.md";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    setExportMd(buildExportMarkdown(buildArtifact()));
   }, [buildArtifact]);
 
   const copyShareLink = useCallback(async () => {
     const enc = encodeShare(buildArtifact());
     const url = `${window.location.origin}${window.location.pathname}#a=${enc}`;
     window.history.replaceState(null, "", `#a=${enc}`);
+    setShareUrl(url);
     try {
       await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setShareCopied(true);
+      setShareClipFail(false);
+      setTimeout(() => setShareCopied(false), 2500);
     } catch {
-      // Clipboard blocked — at least the URL bar now carries the share state.
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      // Clipboard blocked: reveal a readonly, selectable URL field instead.
+      setShareClipFail(true);
+      requestAnimationFrame(() => {
+        shareInputRef.current?.focus();
+        shareInputRef.current?.select();
+      });
     }
   }, [buildArtifact]);
 
@@ -362,9 +370,9 @@ export default function Page() {
                 onClick={copyShareLink}
                 className="flex items-center gap-1.5 rounded-card border border-surface-line bg-white px-2.5 py-1.5 text-[13px] font-semibold text-graphite-muted transition hover:border-teal/50 hover:text-teal-ink"
               >
-                {copied ? (
+                {shareCopied ? (
                   <>
-                    <Check className="h-3.5 w-3.5 text-teal" strokeWidth={2.6} /> Copied
+                    <Check className="h-3.5 w-3.5 text-teal" strokeWidth={2.6} /> Share link ready
                   </>
                 ) : (
                   <>
@@ -377,6 +385,29 @@ export default function Page() {
           <StatusChip cached={cached} running={running} started={started} sharedView={sharedView} />
         </div>
       </header>
+
+      {shareClipFail && shareUrl && (
+        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-card border border-teal/40 bg-teal-soft/40 px-3 py-2.5">
+          <span className="text-[13px] font-semibold text-teal-ink">
+            Share link ready. Copy it:
+          </span>
+          <input
+            ref={shareInputRef}
+            readOnly
+            value={shareUrl}
+            onFocus={(e) => e.currentTarget.select()}
+            className="min-w-0 flex-1 rounded border border-surface-line bg-white px-2.5 py-1.5 text-[12.5px] text-graphite outline-none"
+          />
+          <button
+            type="button"
+            onClick={() => setShareClipFail(false)}
+            className="text-graphite-faint hover:text-graphite"
+            aria-label="Dismiss"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
         {/* Left — Research Question Console */}
@@ -396,7 +427,7 @@ export default function Page() {
                     type="button"
                     onClick={() => setHypoCollapsed(false)}
                     disabled={running}
-                    className="mt-1.5 flex items-center gap-1 text-[12.5px] font-semibold text-teal-ink hover:underline disabled:opacity-50"
+                    className="mt-1.5 flex items-center gap-1 text-[13px] font-semibold text-teal-ink hover:underline disabled:opacity-50"
                   >
                     <Pencil className="h-3 w-3" /> Edit question
                   </button>
@@ -446,6 +477,26 @@ export default function Page() {
                 className="h-4 w-4 accent-teal"
               />
             </label>
+
+            <label className="mt-2 flex cursor-pointer items-center justify-between rounded border border-surface-line bg-surface-sunken/40 px-2.5 py-2">
+              <span className="flex items-center gap-1.5 text-[13px] font-medium text-graphite-muted">
+                <Zap className="h-3.5 w-3.5 text-amber" strokeWidth={2.3} />
+                Use cached demo run
+              </span>
+              <input
+                type="checkbox"
+                checked={demoMode}
+                disabled={running}
+                onChange={(e) => setDemoMode(e.target.checked)}
+                className="h-4 w-4 accent-amber"
+              />
+            </label>
+            {demoMode && (
+              <p className="mt-1 text-[11.5px] leading-snug text-amber-ink">
+                Instant, clearly labeled cached run. Same transformation, simulator, proof, rubric,
+                and export or share controls. Best for a reliable Build Day demo.
+              </p>
+            )}
           </div>
 
           <div className="rounded-card border border-surface-line bg-white p-3">
@@ -540,7 +591,7 @@ export default function Page() {
                       <a
                         key={s.id}
                         href={`#${s.id}`}
-                        className="rounded bg-surface-sunken px-1.5 py-0.5 text-[10.5px] font-medium text-graphite-muted hover:bg-teal-soft hover:text-teal-ink"
+                        className="rounded bg-surface-sunken px-2 py-0.5 text-[13px] font-medium text-graphite-muted hover:bg-teal-soft hover:text-teal-ink"
                       >
                         {s.label}
                       </a>
@@ -572,8 +623,11 @@ export default function Page() {
           ) : rubricBand ? (
             <CompactRubric band={rubricBand} />
           ) : null}
-          {(completed || started) && (
-            <TeamReview comments={comments} onChange={setComments} readOnly={sharedView} />
+          {!sharedView && (completed || started) && (
+            <TeamReview comments={comments} onChange={setComments} />
+          )}
+          {sharedView && comments.length > 0 && (
+            <TeamReview comments={comments} onChange={setComments} readOnly />
           )}
           {!hasPayoff && <PayoffPlaceholder started={started} />}
         </aside>
@@ -584,6 +638,10 @@ export default function Page() {
         evidence, a live candidate scan, an adversarial critic pass, and a deterministic rubric
         check. Not a clinical recommendation.
       </footer>
+
+      {exportMd !== null && (
+        <ExportModal markdown={exportMd} onClose={() => setExportMd(null)} />
+      )}
     </div>
   );
 }

@@ -116,26 +116,58 @@ function cap(s: string): ExecutiveSummary["evidenceConfidence"]["level"] {
   return "Moderate";
 }
 
+type Verdict = "use" | "background" | "ignore";
+
+function normId(id: string): string {
+  return id
+    .toUpperCase()
+    .replace(/\s+/g, "")
+    .replace(/^PMID:?/, "PMID:");
+}
+
 /**
- * Classify live candidates: `use` if the analysis names the ID, `ignore` when
- * the live scan was weak/unavailable, otherwise `background`. Curated evidence
- * stays primary; live lookup is secondary.
+ * Parse the model's "### Candidate Evidence Verdicts" block into ID -> verdict.
+ * This is the model's own judgment about each live candidate.
+ */
+export function extractCandidateVerdicts(text: string): Record<string, Verdict> {
+  const out: Record<string, Verdict> = {};
+  const block = text.match(/###\s*Candidate Evidence Verdicts([\s\S]*?)(?:\n#{2,3}\s|$)/i);
+  if (!block) return out;
+  for (const m of block[1].matchAll(
+    /-\s*(NCT\d{6,9}|PMID:?\s*\d+)\s*:\s*(use|background|ignore)\b/gi,
+  )) {
+    out[normId(m[1])] = m[2].toLowerCase() as Verdict;
+  }
+  return out;
+}
+
+/**
+ * Classify live candidates. The model's explicit verdict wins; if absent, fall
+ * back to a conservative heuristic. Curated evidence stays primary; live lookup
+ * is secondary, and ignored candidates never count as "used".
  */
 export function classifyCandidates(
   candidates: EvidenceCandidate[],
   analysisText: string,
   lookupStatus: "ok" | "low_relevance" | "unavailable" | "none",
+  verdicts: Record<string, Verdict> = {},
 ): EvidenceCandidate[] {
   const lower = analysisText.toLowerCase();
   return candidates.map((c) => {
-    const core = c.id.replace(/^PMID:/i, "").toLowerCase();
-    const named =
-      lower.includes(c.id.toLowerCase()) || (core.length >= 5 && lower.includes(core));
+    const modelVerdict = verdicts[normId(c.id)];
     let relevance: EvidenceCandidate["relevance"];
-    if (named) relevance = "use";
-    else if (lookupStatus === "low_relevance" || lookupStatus === "unavailable")
-      relevance = "ignore";
-    else relevance = "background";
+    if (modelVerdict) {
+      relevance = modelVerdict;
+    } else {
+      const core = c.id.replace(/^PMID:/i, "").toLowerCase();
+      const named =
+        lower.includes(c.id.toLowerCase()) || (core.length >= 5 && lower.includes(core));
+      if (lookupStatus === "low_relevance" || lookupStatus === "unavailable") {
+        relevance = "ignore";
+      } else {
+        relevance = named ? "use" : "background";
+      }
+    }
     return { ...c, relevance };
   });
 }

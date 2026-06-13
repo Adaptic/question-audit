@@ -80,12 +80,12 @@ export function EvidenceLookupRail({
                     href={c.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-mono text-[10px] font-semibold text-teal-ink hover:underline"
+                    className="font-mono text-[13px] font-semibold text-teal-ink hover:underline"
                   >
                     {c.id}
                   </a>
                 ) : (
-                  <span className="font-mono text-[10px] font-semibold text-graphite">{c.id}</span>
+                  <span className="font-mono text-[13px] font-semibold text-graphite">{c.id}</span>
                 )}
                 {c.phase && (
                   <span className="rounded bg-white px-1 py-0.5 text-[9px] text-graphite-muted">

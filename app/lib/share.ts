@@ -245,14 +245,22 @@ export function buildExportMarkdown(a: AuditArtifact): string {
     ];
     const background = a.proof.candidates
       .filter((c) => c.relevance === "background")
-      .map((c) => `${c.id} (${c.source}, background)`);
+      .map((c) => `${c.id} (${c.source})`);
+    const ignored = a.proof.candidates
+      .filter((c) => c.relevance === "ignore")
+      .map((c) => `${c.id} (${c.source})`);
     L.push(`## Evidence used`);
     if (a.proof.lookupNote) L.push(`_${a.proof.lookupNote}_`, "");
     for (const u of used) L.push(`- ${u}`);
-    if (background.length) {
-      L.push("");
-      L.push(`Background context (not relied on): ${background.join("; ")}`);
-    }
+    L.push("");
+    L.push(`### Evidence status`);
+    L.push(`- Used: ${used.length} source(s) above.`);
+    L.push(
+      `- Background only (not relied on): ${background.length ? background.join("; ") : "none"}`,
+    );
+    L.push(
+      `- Ignored (off-topic / low relevance, not counted): ${ignored.length ? ignored.join("; ") : "none"}`,
+    );
     L.push("");
 
     if (a.proof.assumptions.length) {

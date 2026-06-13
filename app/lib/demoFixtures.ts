@@ -73,6 +73,13 @@ The revised design improves on the original because it tests the effect where it
 - What changes: Enrich the population and target high-mortality cancers under an adaptive design, instead of an all-cancer composite in everyone.
 - Evidence confidence: Moderate — grounded in NHS-Galleri, PATHFINDER and NLST, but specific PPV and effect-size figures are reasoned estimates.
 
+### Candidate Evidence Verdicts
+- NCT04241796: use — PATHFINDER anchors the multi-cancer PPV figure used in the analysis.
+- NCT05611632: background — a general MCED screening study, related context only.
+- PMID:37683136: background — MCED performance paper, supports background but not a specific claim.
+- NCT07133269: ignore — generic blood-biomarker registry, off-topic for this endpoint question.
+- NCT05699785: ignore — community screening engagement study, low relevance to the late-stage composite.
+
 ## Rubric Self-Check
 - [x] The research question is explicitly restated and audited for hidden assumptions
 - [x] At least 2 prior related trials or studies are referenced by name (NHS-Galleri, PATHFINDER, NLST, SEER)
@@ -251,6 +258,24 @@ const GALLERI_CANDIDATES: EvidenceCandidate[] = [
     year: "2023",
     url: "https://pubmed.ncbi.nlm.nih.gov/37683136/",
     signals: ["Annals of Oncology"],
+    relevance: "candidate",
+  },
+  {
+    source: "clinicaltrials.gov",
+    id: "NCT07133269",
+    title: "Observational Registry of Blood-Based Biomarkers in Adults",
+    status: "RECRUITING",
+    url: "https://clinicaltrials.gov/study/NCT07133269",
+    signals: ["term match"],
+    relevance: "candidate",
+  },
+  {
+    source: "clinicaltrials.gov",
+    id: "NCT05699785",
+    title: "Community Screening Engagement Study",
+    status: "RECRUITING",
+    url: "https://clinicaltrials.gov/study/NCT05699785",
+    signals: ["term match"],
     relevance: "candidate",
   },
 ];

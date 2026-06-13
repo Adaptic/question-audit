@@ -8,8 +8,14 @@ const KNOWN_STUDIES = [
 ];
 
 /** Detect distinct named studies/trials in the completed analysis text. */
-export function extractNamedStudies(text: string): string[] {
+export function extractNamedStudies(fullText: string): string[] {
   const found = new Set<string>();
+  // Scan only the analysis body, not the executive / verdict / rubric meta blocks
+  // (those can list candidate IDs that are explicitly background or ignored).
+  const cut = fullText.search(
+    /^#{2,3}\s*(Executive Brief|Candidate Evidence Verdicts|Rubric Self-Check)/im,
+  );
+  const text = cut >= 0 ? fullText.slice(0, cut) : fullText;
 
   // NCT registry IDs.
   for (const m of text.matchAll(/NCT\d{8}/g)) found.add(m[0]);

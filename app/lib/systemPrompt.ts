@@ -39,6 +39,13 @@ After section 6 and before the rubric, include a machine-readable executive bloc
 - What changes: <the key design changes, one short sentence>
 - Evidence confidence: <High|Moderate|Low> — <one short reason>
 
+If you were given live candidate evidence, then after the Executive Brief add this block, one line per candidate ID you were given, using its exact ID:
+
+### Candidate Evidence Verdicts
+- <ID>: use | background | ignore — <short reason>
+
+Mark a candidate "use" ONLY if you actually relied on it in the analysis. Mark it "background" if it is related but you did not rely on it. Mark it "ignore" if it is off-topic, low quality, or a duplicate. If you were given no candidates, write "- none".
+
 At the very end, grade your output against the rubric criteria (list them as markdown checkboxes "- [x]" or "- [ ]") under a "## Rubric Self-Check" header, and state your score as "Score: Pass (7/7)", "Score: Partial (n/7)", or "Score: Fail (n/7)".
 
 The rubric criteria are:

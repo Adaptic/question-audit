@@ -18,6 +18,7 @@ import {
   extractQuestionDiff,
   extractExecutive,
   classifyCandidates,
+  extractCandidateVerdicts,
   parseCriticWarnings,
 } from "@/app/lib/parse";
 import type { EvidenceCandidate, ExecutiveSummary, QuestionDiffData } from "@/app/lib/types";
@@ -418,7 +419,8 @@ function emitVerification(args: {
   const executive = extractExecutive(analysis) ?? synthesizeExecutive(analysis, diff, hypothesis);
   if (executive) emit({ type: "executive", summary: executive });
 
-  const classified = classifyCandidates(candidates, analysis, status);
+  const verdicts = extractCandidateVerdicts(analysis);
+  const classified = classifyCandidates(candidates, analysis, status, verdicts);
   const weakLive =
     (status === "low_relevance" || status === "unavailable") && Boolean(packet);
 
