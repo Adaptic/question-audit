@@ -1,0 +1,38 @@
+{
+  "id": "cancer-survivor-mced",
+  "label": "Cancer Survivor MCED (Enriched Population)",
+  "sources": [
+    {
+      "name": "PATHFINDER / PATHFINDER 2 (GRAIL)",
+      "type": "study",
+      "note": "MCED performance and PPV in screening populations; use for diagnostic-yield and PPV anchors when reasoning about enrichment."
+    },
+    {
+      "name": "SEER high-mortality cancer incidence data",
+      "type": "guideline",
+      "note": "Background incidence and survival by stage for pancreatic, ovarian, liver, and lung cancers. Use for prevalence/effect-size reasoning, labeled as background."
+    },
+    {
+      "name": "Surveillance guidelines for cancer survivors (NCCN/ASCO)",
+      "type": "guideline",
+      "note": "Standard-of-care surveillance against which an MCED arm would be compared. Use to define the control arm."
+    }
+  ],
+  "knownFacts": [
+    "Population: cancer survivors with established risk factors — a higher-prevalence, enriched group versus the general screening population.",
+    "Intervention: methylation-based MCED test in addition to standard surveillance.",
+    "Comparator: standard surveillance alone.",
+    "Target: 12 high-mortality cancer types including pancreatic, ovarian, liver, and lung cancer.",
+    "Rationale: enriching for higher baseline risk raises pre-test probability, which raises PPV for a given test sensitivity/specificity."
+  ],
+  "quantContext": [
+    "PPV rises with disease prevalence at fixed sensitivity/specificity; an enriched survivor population can materially raise realized PPV relative to a general screening cohort.",
+    "Second primary cancers and recurrence are meaningfully more common in survivors than de novo cancers in the general population, raising event rates and statistical power.",
+    "Focusing on high-mortality cancers where early-stage detection changes management concentrates the clinically meaningful stage-shift signal."
+  ],
+  "demoCaveats": [
+    "Survivor surveillance introduces lead-time and length-time bias considerations that must be addressed in the design.",
+    "Do not present specific PPV or sensitivity numbers as measured for this exact population unless sourced — label as estimates.",
+    "Distinguishing recurrence/second-primary from de novo cancer is a real classification challenge to flag, not to wave away."
+  ]
+}

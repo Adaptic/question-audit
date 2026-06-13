@@ -1,0 +1,38 @@
+{
+  "id": "galleri",
+  "label": "NHS-Galleri MCED Trial",
+  "sources": [
+    {
+      "name": "NHS-Galleri trial (ISRCTN91431511)",
+      "type": "trial",
+      "note": "Randomized controlled trial of the Galleri methylation-based multi-cancer early detection (MCED) blood test in a general NHS screening population. Use for endpoint, population, enrollment size, and high-level design facts."
+    },
+    {
+      "name": "PATHFINDER study (GRAIL)",
+      "type": "study",
+      "note": "Prospective MCED study reporting cancer signal detection and positive predictive value in a screening-eligible population. Use for PPV / diagnostic-yield context."
+    },
+    {
+      "name": "Stewart & Barr, 'The Grail Trial Didn't Fail. It Asked the Wrong Question.' (2026)",
+      "type": "analysis",
+      "note": "Argues the composite all-cancer late-stage endpoint was the wrong question for a low-prevalence screening population, and that a pre-specified high-mortality subgroup did show stage shift."
+    }
+  ],
+  "knownFacts": [
+    "Population: adults aged 50-77 from a general NHS screening population, ~140,000 participants randomized.",
+    "Primary endpoint: reduction in the combined (composite) incidence of Stage III and Stage IV cancer diagnoses across ALL cancer types.",
+    "The composite all-cancer endpoint was not met at the pre-specified interim analysis.",
+    "A pre-specified subgroup of ~12 high-mortality cancers (including pancreatic, ovarian, liver, lung, esophageal, stomach) showed a more substantial late-stage reduction signal.",
+    "Concern: in a general, average-risk screening population the prevalence of any single cancer is low, which lowers the positive predictive value (PPV) of a positive test."
+  ],
+  "quantContext": [
+    "MCED PPV in screening-eligible populations has been reported in the ~40-43% range (PATHFINDER), but pooled across a general low-prevalence population the realized PPV for any specific late-stage shift is diluted.",
+    "A broad composite endpoint pools high-incidence, slow-shifting cancers (e.g. prostate, breast already covered by existing screening) with rare high-mortality cancers, diluting the measurable stage-shift effect size.",
+    "Powering an all-cancer composite for stage shift requires either a very large effect or a very large/long trial; enrichment for high-mortality cancers raises the per-event signal."
+  ],
+  "demoCaveats": [
+    "Do not present the inferred high-mortality subgroup strategy as a verified clinical recommendation — it is a design hypothesis.",
+    "Label any specific numeric PPV, NNT, or effect-size figure as an estimate or assumption unless it is in the known facts.",
+    "Exact enrollment and interim-analysis numbers should be treated as approximate context, not audited trial data."
+  ]
+}

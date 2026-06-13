@@ -1,0 +1,38 @@
+{
+  "id": "post-chemo-fatigue",
+  "label": "Post-Chemo Fatigue — Low-Dose Naltrexone",
+  "sources": [
+    {
+      "name": "Low-dose naltrexone (LDN) fatigue/fibromyalgia trials",
+      "type": "study",
+      "note": "Small RCTs and crossover studies of LDN for fatigue and chronic pain; use for plausible effect size and safety, labeled as small-sample evidence."
+    },
+    {
+      "name": "Cancer-related fatigue measurement instruments (BFI, FACIT-F, PROMIS Fatigue)",
+      "type": "guideline",
+      "note": "Validated patient-reported fatigue endpoints. Use to define a defensible primary outcome and minimal clinically important difference (MCID)."
+    },
+    {
+      "name": "NCCN Cancer-Related Fatigue guideline",
+      "type": "guideline",
+      "note": "Defines cancer-related fatigue and standard management. Use for population definition and standard-of-care comparator context."
+    }
+  ],
+  "knownFacts": [
+    "Intervention: low-dose naltrexone 4.5 mg daily.",
+    "Population: breast cancer survivors 6-24 months post-chemotherapy completion.",
+    "Primary endpoint as stated: >=30% reduction in cancer-related fatigue severity score.",
+    "Design: 12-week randomized, placebo-controlled trial.",
+    "Cancer-related fatigue is multifactorial (anemia, deconditioning, depression, sleep, inflammation), which complicates attributing change to a single agent."
+  ],
+  "quantContext": [
+    "Fatigue PRO scales have meaningful placebo response rates; a 30% responder threshold must account for placebo response to avoid an underpowered or biased comparison.",
+    "MCID on common fatigue instruments is often smaller than a 30% relative change; choice of responder definition strongly affects required sample size.",
+    "12 weeks may be short relative to the natural recovery trajectory of post-chemo fatigue, risking confounding by spontaneous improvement."
+  ],
+  "demoCaveats": [
+    "LDN evidence base for cancer-related fatigue is limited and mostly small-sample — do not overstate prior efficacy.",
+    "Any stated effect size or sample-size figure is an estimate unless explicitly sourced.",
+    "Spontaneous recovery over 6-24 months post-chemo is a real confounder to address, not to ignore."
+  ]
+}
