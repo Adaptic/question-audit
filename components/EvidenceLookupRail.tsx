@@ -17,13 +17,13 @@ export function EvidenceLookupRail({
   if (state === "idle") return null;
 
   return (
-    <div className="rounded-card border border-surface-line bg-white">
-      <div className="flex items-center justify-between border-b border-surface-line px-3 py-2">
-        <div className="flex items-center gap-1.5">
-          <Search className="h-3.5 w-3.5 text-teal" strokeWidth={2.5} />
-          <span className="text-[13px] font-semibold text-graphite">Live evidence scan</span>
-          <span className="text-[11px] text-graphite-faint">
-            candidate evidence · metadata only
+    <div className="rounded-card border border-surface-line bg-surface shadow-panel">
+      <div className="flex items-center justify-between border-b border-surface-line px-4 py-3">
+        <div className="flex items-center gap-2">
+          <Search className="h-4 w-4 text-teal" strokeWidth={2.4} />
+          <h3 className="text-[13px] font-bold tracking-tight text-graphite">Live evidence scan</h3>
+          <span className="font-mono text-[10.5px] tracking-[0.04em] text-graphite-faint">
+            metadata only
           </span>
         </div>
         {state === "scanning" && (
@@ -39,7 +39,7 @@ export function EvidenceLookupRail({
           {queryTerms.map((t) => (
             <span
               key={t}
-              className="rounded bg-surface-sunken px-1.5 py-0.5 text-[10px] text-graphite-muted"
+              className="rounded-sm border border-surface-line bg-surface-raised px-1.5 py-0.5 font-mono text-[10px] text-graphite-muted"
             >
               {t}
             </span>
@@ -67,7 +67,7 @@ export function EvidenceLookupRail({
           {candidates.map((c) => (
             <li
               key={`${c.source}-${c.id}`}
-              className="animate-fade-in-up rounded border border-surface-line bg-surface-sunken/60 px-2 py-1.5"
+              className="animate-fade-in-up rounded-sm border border-surface-line bg-surface-sunken px-2.5 py-2"
             >
               <div className="flex items-center gap-1.5">
                 {c.source === "clinicaltrials.gov" ? (
@@ -88,12 +88,12 @@ export function EvidenceLookupRail({
                   <span className="font-mono text-[13px] font-semibold text-graphite">{c.id}</span>
                 )}
                 {c.phase && (
-                  <span className="rounded bg-white px-1 py-0.5 text-[9px] text-graphite-muted">
+                  <span className="rounded-sm bg-surface-raised px-1 py-0.5 text-[9px] text-graphite-muted">
                     {c.phase}
                   </span>
                 )}
                 {c.status && (
-                  <span className="rounded bg-white px-1 py-0.5 text-[9px] uppercase text-graphite-faint">
+                  <span className="rounded-sm bg-surface-raised px-1 py-0.5 text-[9px] uppercase text-graphite-faint">
                     {c.status}
                   </span>
                 )}

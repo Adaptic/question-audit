@@ -342,9 +342,9 @@ export default function Page() {
   return (
     <div className="mx-auto min-h-screen max-w-[1500px] px-4 py-4 sm:px-6">
       {/* Header */}
-      <header className="mb-4 flex flex-wrap items-center gap-3 rounded-card border border-surface-line bg-white px-4 py-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-card bg-graphite">
-          <Microscope className="h-5 w-5 text-white" strokeWidth={2} />
+      <header className="mb-4 flex flex-wrap items-center gap-3 rounded-card border border-surface-line bg-surface px-4 py-3 shadow-panel">
+        <div className="flex h-9 w-9 items-center justify-center rounded-card bg-accent shadow-panel">
+          <Microscope className="h-5 w-5 text-canvas" strokeWidth={2.2} />
         </div>
         <div className="min-w-0">
           <h1 className="flex items-baseline gap-2 leading-tight">
@@ -361,14 +361,14 @@ export default function Page() {
               <button
                 type="button"
                 onClick={exportBrief}
-                className="flex items-center gap-1.5 rounded-card border border-surface-line bg-white px-2.5 py-1.5 text-[13px] font-semibold text-graphite-muted transition hover:border-teal/50 hover:text-teal-ink"
+                className="flex items-center gap-1.5 rounded-sm border border-surface-line bg-surface-raised px-2.5 py-1.5 text-[13px] font-semibold text-graphite-muted transition hover:border-teal hover:text-graphite"
               >
                 <Download className="h-3.5 w-3.5" strokeWidth={2.3} /> Export Audit Brief
               </button>
               <button
                 type="button"
                 onClick={copyShareLink}
-                className="flex items-center gap-1.5 rounded-card border border-surface-line bg-white px-2.5 py-1.5 text-[13px] font-semibold text-graphite-muted transition hover:border-teal/50 hover:text-teal-ink"
+                className="flex items-center gap-1.5 rounded-sm border border-surface-line bg-surface-raised px-2.5 py-1.5 text-[13px] font-semibold text-graphite-muted transition hover:border-teal hover:text-graphite"
               >
                 {shareCopied ? (
                   <>
@@ -396,7 +396,7 @@ export default function Page() {
             readOnly
             value={shareUrl}
             onFocus={(e) => e.currentTarget.select()}
-            className="min-w-0 flex-1 rounded border border-surface-line bg-white px-2.5 py-1.5 text-[12.5px] text-graphite outline-none"
+            className="min-w-0 flex-1 rounded border border-surface-line bg-surface px-2.5 py-1.5 text-[12.5px] text-graphite outline-none"
           />
           <button
             type="button"
@@ -412,10 +412,8 @@ export default function Page() {
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
         {/* Left — Research Question Console */}
         <section className="flex flex-col gap-3 xl:col-span-3">
-          <div className="rounded-card border border-surface-line bg-white p-3">
-            <label className="mb-1.5 block text-[14px] font-bold text-graphite">
-              Research question
-            </label>
+          <div className="rounded-card border border-surface-line bg-surface p-3 shadow-panel">
+            <div className="tm-eyebrow mb-2">Research question</div>
 
             {hypoCollapsed && hypothesis ? (
               <div className="rounded border border-surface-line bg-surface-sunken/50 p-2.5">
@@ -443,7 +441,7 @@ export default function Page() {
                 placeholder="Enter your research hypothesis…  e.g. 'Drug X reduces endpoint Y in population Z versus placebo over N weeks.'"
                 rows={6}
                 disabled={running}
-                className="w-full resize-y rounded border border-surface-line bg-surface-sunken/50 p-2.5 text-[14px] leading-relaxed text-graphite outline-none transition focus:border-teal focus:bg-white disabled:opacity-60"
+                className="w-full resize-y rounded border border-surface-line bg-surface-sunken/50 p-2.5 text-[14px] leading-relaxed text-graphite outline-none transition focus:border-teal focus:bg-surface disabled:opacity-60"
               />
             )}
 
@@ -451,7 +449,7 @@ export default function Page() {
               type="button"
               onClick={runAudit}
               disabled={running || !hypothesis.trim()}
-              className="mt-2 flex w-full items-center justify-center gap-2 rounded-card bg-graphite px-3 py-2.5 text-[14px] font-semibold text-white transition hover:bg-graphite/90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-sm bg-accent px-3 py-3 text-[14px] font-bold text-canvas shadow-panel transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {running ? (
                 <>
@@ -499,10 +497,8 @@ export default function Page() {
             )}
           </div>
 
-          <div className="rounded-card border border-surface-line bg-white p-3">
-            <div className="mb-2 text-[12px] font-bold uppercase tracking-wide text-graphite-faint">
-              Presets
-            </div>
+          <div className="rounded-card border border-surface-line bg-surface p-3 shadow-panel">
+            <div className="tm-eyebrow mb-2.5">Presets</div>
             <PresetButtons
               presets={PRESETS}
               activeId={activePreset}
@@ -513,7 +509,7 @@ export default function Page() {
         </section>
 
         {/* Center — Run Workspace */}
-        <section className="flex flex-col gap-3 xl:col-span-5">
+        <section className="flex flex-col gap-3 xl:col-span-6">
           {sharedView && (
             <div className="flex flex-wrap items-center gap-2 rounded-card border border-teal/30 bg-teal-soft/50 px-3 py-2.5">
               <Link2 className="h-4 w-4 text-teal-ink" strokeWidth={2.3} />
@@ -523,7 +519,7 @@ export default function Page() {
               <button
                 type="button"
                 onClick={newAudit}
-                className="ml-auto flex items-center gap-1 rounded-card bg-graphite px-2.5 py-1 text-[12.5px] font-semibold text-white"
+                className="ml-auto flex items-center gap-1 rounded-sm border border-surface-line bg-surface-raised px-2.5 py-1 text-[12.5px] font-semibold text-graphite hover:border-teal"
               >
                 <RotateCcw className="h-3.5 w-3.5" /> Run a fresh audit
               </button>
@@ -531,7 +527,7 @@ export default function Page() {
           )}
 
           {!sharedView && (
-            <div className="rounded-card border border-surface-line bg-white px-3 py-2.5">
+            <div className="rounded-card border border-surface-line bg-surface px-3 py-3 shadow-panel">
               <StageRail statuses={stages} />
             </div>
           )}
@@ -564,7 +560,7 @@ export default function Page() {
           {!started ? (
             <IdleExplainer />
           ) : sharedView ? null : (
-            <div className="rounded-card border border-surface-line bg-white">
+            <div className="rounded-card border border-surface-line bg-surface shadow-panel">
               <div className="flex flex-wrap items-center gap-1.5 border-b border-surface-line px-3 py-2.5">
                 <button
                   type="button"
@@ -615,7 +611,7 @@ export default function Page() {
         </section>
 
         {/* Right — Product Payoff (sticky cockpit panel) */}
-        <aside className="flex flex-col gap-3 xl:col-span-4 xl:sticky xl:top-4 xl:self-start xl:max-h-[calc(100vh-2rem)] xl:overflow-y-auto tm-scroll">
+        <aside className="flex flex-col gap-3 xl:col-span-3 xl:sticky xl:top-4 xl:self-start xl:max-h-[calc(100vh-2rem)] xl:overflow-y-auto tm-scroll">
           {diff && <QuestionDiff diff={diff} />}
           {proof && <ProofPanel proof={proof} />}
           {rubric ? (
@@ -701,7 +697,7 @@ function CompactRubric({
         ? "bg-amber-soft text-amber-ink"
         : "bg-coral-soft text-coral-ink";
   return (
-    <div className="rounded-card border border-surface-line bg-white px-4 py-3">
+    <div className="rounded-card border border-surface-line bg-surface px-4 py-3">
       <div className="text-[14px] font-bold text-graphite">Rubric result</div>
       <div className="mt-1 flex items-center gap-2">
         <span className="text-[15px] font-bold text-graphite">
@@ -723,7 +719,7 @@ function IdleExplainer() {
     ["Produce an adaptive revision", "Address the critique with an enrichment or adaptive design."],
   ];
   return (
-    <div className="rounded-card border border-surface-line bg-white p-4">
+    <div className="rounded-card border border-surface-line bg-surface p-4 shadow-panel">
       <h2 className="text-[15px] font-bold text-graphite">Find the flaw before protocol lock</h2>
       <p className="mt-1 text-[14px] leading-relaxed text-graphite-muted">
         Question Audit runs a closed-loop audit of the research question itself — the decisions that
@@ -750,7 +746,7 @@ function IdleExplainer() {
 
 function PayoffPlaceholder({ started }: { started: boolean }) {
   return (
-    <div className="rounded-card border border-dashed border-surface-line bg-white/60 p-4 text-center">
+    <div className="rounded-card border border-dashed border-surface-line bg-surface/60 p-4 text-center">
       <p className="text-[13px] font-semibold text-graphite-muted">Product payoff</p>
       <p className="mt-1 text-[12.5px] leading-snug text-graphite-faint">
         {started

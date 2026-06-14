@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 html,
@@ -13,48 +13,82 @@ body {
 }
 
 body {
-  background-color: #eef1f6;
-  /* Subtle clinical grid texture. */
+  background-color: #0a0d13;
+  /* Quiet instrument grid texture. */
   background-image:
-    linear-gradient(rgba(28, 34, 48, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(28, 34, 48, 0.035) 1px, transparent 1px);
-  background-size: 28px 28px;
-  color: #1c2230;
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 30px 30px;
+  color: #e7ebf3;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* Thin, clinical scrollbars for the inner panels. */
+/* Visible focus on dark surfaces (AA). */
+*:focus-visible {
+  outline: 2px solid #2dd4bf;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Respect reduced motion: no infinite decorative loops. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Thin instrument scrollbars. */
 .tm-scroll::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 .tm-scroll::-webkit-scrollbar-thumb {
-  background: #c7cedb;
+  background: rgba(255, 255, 255, 0.12);
   border-radius: 8px;
 }
 .tm-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* Rendered markdown output styling. */
+/* Mono eyebrow utility (small uppercase micro-labels). */
+.tm-eyebrow {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #828da1;
+}
+
+/* Tabular numerals for data-viz numbers. */
+.tm-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Rendered markdown output, dark. */
 .tm-prose h2 {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #1c2230;
+  color: #e7ebf3;
   margin: 1.5rem 0 0.55rem;
   scroll-margin-top: 1rem;
 }
 .tm-prose h3 {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #075c5c;
+  color: #7ff0e2;
   margin: 1.05rem 0 0.4rem;
 }
 .tm-prose p {
   font-size: 0.95rem;
   line-height: 1.65;
-  color: #2c3444;
+  color: #c2c9d6;
   margin: 0.45rem 0;
 }
 .tm-prose ul,
@@ -65,20 +99,22 @@ body {
 .tm-prose li {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: #2c3444;
+  color: #c2c9d6;
   margin: 0.25rem 0;
 }
 .tm-prose strong {
-  color: #1c2230;
+  color: #e7ebf3;
   font-weight: 650;
 }
 .tm-prose em {
-  color: #5b6472;
+  color: #9099ab;
 }
 .tm-prose code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.85rem;
-  background: #f4f6fa;
+  background: #0e131b;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: #e7ebf3;
   padding: 0.05rem 0.3rem;
   border-radius: 4px;
 }

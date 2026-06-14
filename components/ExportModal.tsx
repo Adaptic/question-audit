@@ -48,11 +48,11 @@ export function ExportModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-graphite/40 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4"
       onClick={onClose}
     >
       <div
-        className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-card border border-surface-line bg-white shadow-xl"
+        className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-card border border-surface-line bg-surface shadow-panel"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-2 border-b border-surface-line px-4 py-3">
@@ -73,14 +73,14 @@ export function ExportModal({
           <button
             type="button"
             onClick={download}
-            className="flex items-center gap-1.5 rounded-card bg-graphite px-3 py-1.5 text-[13px] font-semibold text-white hover:bg-graphite/90"
+            className="flex items-center gap-1.5 rounded-sm bg-accent px-3 py-1.5 text-[13px] font-bold text-canvas hover:brightness-105"
           >
             <Download className="h-3.5 w-3.5" strokeWidth={2.4} /> Download .md
           </button>
           <button
             type="button"
             onClick={copy}
-            className="flex items-center gap-1.5 rounded-card border border-surface-line bg-white px-3 py-1.5 text-[13px] font-semibold text-graphite-muted hover:border-teal/50 hover:text-teal-ink"
+            className="flex items-center gap-1.5 rounded-sm border border-surface-line bg-surface-raised px-3 py-1.5 text-[13px] font-semibold text-graphite-muted hover:border-teal hover:text-graphite"
           >
             {copied ? (
               <>

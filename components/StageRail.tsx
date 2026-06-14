@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Loader2, Minus } from "lucide-react";
+import { Check, Minus } from "lucide-react";
 import type { StageId, StageStatus } from "@/app/lib/types";
 
 const STAGES: { id: StageId; label: string }[] = [
@@ -17,27 +17,17 @@ export function StageRail({
   statuses: Partial<Record<StageId, StageStatus>>;
 }) {
   return (
-    <div className="flex items-center gap-1 overflow-x-auto tm-scroll">
+    <div className="flex items-center overflow-hidden">
       {STAGES.map((stage, i) => {
         const status = statuses[stage.id] ?? "pending";
+        const last = i === STAGES.length - 1;
         return (
-          <div key={stage.id} className="flex items-center gap-1">
-            <div
-              className={[
-                "flex items-center gap-1.5 rounded-card border px-2.5 py-1.5 transition",
-                status === "active"
-                  ? "border-teal bg-teal-soft"
-                  : status === "done"
-                    ? "border-teal/30 bg-white"
-                    : status === "skipped"
-                      ? "border-surface-line bg-surface-sunken"
-                      : "border-surface-line bg-white",
-              ].join(" ")}
-            >
-              <StageIcon status={status} />
+          <div key={stage.id} className={last ? "flex items-center" : "flex flex-1 items-center"}>
+            <span className="flex items-center gap-2">
+              <Node status={status} />
               <span
                 className={[
-                  "whitespace-nowrap text-[12.5px] font-semibold",
+                  "whitespace-nowrap text-[11.5px] font-semibold",
                   status === "active"
                     ? "text-teal-ink"
                     : status === "done"
@@ -47,12 +37,14 @@ export function StageRail({
               >
                 {stage.label}
               </span>
-            </div>
-            {i < STAGES.length - 1 && (
-              <div
+            </span>
+            {!last && (
+              <span
                 className={[
-                  "h-px w-3 shrink-0",
-                  status === "done" ? "bg-teal/40" : "bg-surface-line",
+                  "mx-2 h-px flex-1",
+                  status === "done"
+                    ? "bg-gradient-to-r from-teal/70 to-surface-line"
+                    : "bg-surface-line",
                 ].join(" ")}
               />
             )}
@@ -63,14 +55,31 @@ export function StageRail({
   );
 }
 
-function StageIcon({ status }: { status: StageStatus }) {
-  if (status === "active")
-    return <Loader2 className="h-3.5 w-3.5 animate-spin text-teal" strokeWidth={2.5} />;
-  if (status === "done")
-    return <Check className="h-3.5 w-3.5 text-teal" strokeWidth={3} />;
-  if (status === "skipped")
-    return <Minus className="h-3.5 w-3.5 text-graphite-faint" strokeWidth={2.5} />;
+function Node({ status }: { status: StageStatus }) {
+  if (status === "done") {
+    return (
+      <span className="flex h-[22px] w-[22px] items-center justify-center rounded-full border border-teal/40 bg-teal-soft text-teal">
+        <Check className="h-3 w-3" strokeWidth={3} />
+      </span>
+    );
+  }
+  if (status === "active") {
+    return (
+      <span className="flex h-[22px] w-[22px] animate-pulse-dot items-center justify-center rounded-full bg-accent text-canvas">
+        <span className="h-1.5 w-1.5 rounded-full bg-canvas" />
+      </span>
+    );
+  }
+  if (status === "skipped") {
+    return (
+      <span className="flex h-[22px] w-[22px] items-center justify-center rounded-full border border-surface-line text-graphite-faint">
+        <Minus className="h-3 w-3" strokeWidth={2.5} />
+      </span>
+    );
+  }
   return (
-    <span className="h-2 w-2 rounded-full border border-surface-line bg-surface-sunken" />
+    <span className="flex h-[22px] w-[22px] items-center justify-center rounded-full border border-surface-line">
+      <span className="h-1.5 w-1.5 rounded-full bg-surface-line" />
+    </span>
   );
 }

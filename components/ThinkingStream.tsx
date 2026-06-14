@@ -23,7 +23,7 @@ export function ThinkingStream({
   if (!text && !active) return null;
 
   return (
-    <div className="rounded-card border border-surface-line bg-surface-sunken">
+    <div className="rounded-card border border-surface-line bg-surface-sunken shadow-panel">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -34,15 +34,15 @@ export function ThinkingStream({
         ) : (
           <ChevronRight className="h-3.5 w-3.5 text-graphite-faint" />
         )}
-        <Brain className="h-3.5 w-3.5 text-graphite-muted" strokeWidth={2.2} />
-        <span className="text-[13px] font-semibold text-graphite-muted">Reasoning trace</span>
+        <Brain className="h-3.5 w-3.5 text-teal" strokeWidth={2.2} />
+        <span className="text-[13px] font-semibold text-graphite">Reasoning trace</span>
         {active && (
-          <span className="flex items-center gap-1 text-[11px] text-graphite-faint">
-            <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-graphite-muted" />
+          <span className="flex items-center gap-1 font-mono text-[11px] text-teal">
+            <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-teal" />
             reasoning
           </span>
         )}
-        <span className="ml-auto text-[11px] text-graphite-faint">summarized</span>
+        <span className="ml-auto font-mono text-[10.5px] tracking-[0.04em] text-graphite-faint">summarized</span>
       </button>
       {open && (
         <div

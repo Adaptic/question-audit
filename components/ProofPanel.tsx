@@ -1,135 +1,91 @@
 "use client";
 
-import {
-  ShieldCheck,
-  BookMarked,
-  Sigma,
-  HelpCircle,
-  AlertTriangle,
-  CircleDot,
-  Info,
-} from "lucide-react";
+import { ShieldCheck, Check, Info, AlertTriangle } from "lucide-react";
 import type { ProofData } from "@/app/lib/types";
 
-function Section({
-  icon: Icon,
-  title,
-  tone,
-  items,
-  empty,
-}: {
-  icon: typeof ShieldCheck;
-  title: string;
-  tone: "teal" | "amber" | "coral" | "graphite";
-  items: string[];
-  empty?: string;
-}) {
-  const toneClasses = {
-    teal: "text-teal-ink",
-    amber: "text-amber-ink",
-    coral: "text-coral-ink",
-    graphite: "text-graphite-muted",
-  }[tone];
+type Tone = "good" | "accent" | "warn";
 
-  if (items.length === 0 && !empty) return null;
-
-  return (
-    <div className="px-4 py-3">
-      <div className={`mb-1.5 flex items-center gap-1.5 text-[13px] font-bold ${toneClasses}`}>
-        <Icon className="h-4 w-4" strokeWidth={2.3} />
-        {title}
-        <span className="text-[12px] font-normal text-graphite-faint">
-          {items.length > 0 ? `(${items.length})` : ""}
-        </span>
-      </div>
-      {items.length === 0 ? (
-        <p className="text-[13px] italic text-graphite-faint">{empty}</p>
-      ) : (
-        <ul className="flex flex-col gap-1">
-          {items.map((it, i) => (
-            <li key={i} className="flex items-start gap-1.5">
-              <CircleDot className={`mt-1 h-3 w-3 shrink-0 ${toneClasses}`} strokeWidth={2.5} />
-              <span className="text-[13px] leading-snug text-graphite-muted">{it}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
+interface Row {
+  tone: Tone;
+  tag: string;
+  text: string;
 }
 
-export function ProofPanel({ proof }: { proof: ProofData }) {
-  const usedCandidates = proof.candidates.filter((c) => c.relevance === "use");
-  const backgroundCandidates = proof.candidates.filter((c) => c.relevance === "background");
-  const ignoredCandidates = proof.candidates.filter((c) => c.relevance === "ignore");
+const TONE = {
+  good: { wrap: "bg-teal-soft text-teal", Icon: Check },
+  accent: { wrap: "bg-teal-soft text-teal-ink", Icon: Info },
+  warn: { wrap: "bg-amber-soft text-amber", Icon: AlertTriangle },
+} as const;
 
-  const sourceItems = [
-    ...proof.curatedSources.map((s) => `${s.name} — curated ${s.type}`),
-    ...usedCandidates.map((c) => `${c.id} (${c.source}) — live candidate, used`),
-  ];
+export function ProofPanel({ proof }: { proof: ProofData }) {
+  const used = proof.candidates.filter((c) => c.relevance === "use");
+  const background = proof.candidates.filter((c) => c.relevance === "background");
+  const ignored = proof.candidates.filter((c) => c.relevance === "ignore");
+
+  const rows: Row[] = [];
+
+  for (const s of proof.curatedSources) {
+    rows.push({ tone: "good", tag: "Evidence", text: `${s.name} — curated ${s.type}` });
+  }
+  for (const c of used) {
+    rows.push({ tone: "good", tag: "Evidence", text: `${c.id} (${c.source}) — live candidate, used` });
+  }
   if (proof.namedStudies.length) {
-    sourceItems.push(`Named in analysis: ${proof.namedStudies.slice(0, 6).join(", ")}`);
+    rows.push({ tone: "good", tag: "Named", text: `Named in analysis: ${proof.namedStudies.slice(0, 6).join(", ")}` });
+  }
+  if (background.length) {
+    rows.push({ tone: "accent", tag: "Background", text: `Background only (not relied on): ${background.map((c) => c.id).join(", ")}` });
+  }
+  if (ignored.length) {
+    rows.push({ tone: "warn", tag: "Ignored", text: `Ignored (off-topic / low relevance, not counted): ${ignored.map((c) => c.id).join(", ")}` });
+  }
+  for (const q of proof.quantChecks) rows.push({ tone: "good", tag: "Check", text: q });
+  for (const a of proof.assumptions) rows.push({ tone: "accent", tag: "Assumption", text: a });
+  for (const w of proof.unsupportedWarnings) rows.push({ tone: "warn", tag: "Warning", text: w });
+  for (const u of proof.openUncertainty) rows.push({ tone: "warn", tag: "Open", text: u });
+
+  if (rows.length === 0) {
+    rows.push({ tone: "accent", tag: "Note", text: "No grounding evidence attached." });
   }
 
   return (
-    <div className="animate-fade-in-up rounded-card border border-graphite/15 bg-white">
-      <div className="flex items-center gap-1.5 border-b border-surface-line bg-graphite px-4 py-2.5">
-        <ShieldCheck className="h-4 w-4 text-white" strokeWidth={2.3} />
-        <span className="text-[14px] font-bold text-white">Is this real?</span>
-        <span className="ml-auto text-[12px] text-white/60">evidence · checks · uncertainty</span>
+    <div className="animate-fade-in-up rounded-card border border-surface-line bg-surface shadow-panel">
+      <div className="flex items-center gap-2 border-b border-surface-line px-4 py-3">
+        <ShieldCheck className="h-4 w-4 text-teal" strokeWidth={2.2} />
+        <h3 className="text-[13px] font-bold tracking-tight text-graphite">Is this real?</h3>
+        <span className="ml-auto font-mono text-[10.5px] tracking-[0.06em] text-graphite-faint">
+          grounded
+        </span>
       </div>
 
       {proof.lookupNote && (
-        <div className="flex items-start gap-1.5 border-b border-surface-line bg-amber-soft/60 px-4 py-2">
-          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-ink" strokeWidth={2.4} />
-          <p className="text-[13px] leading-snug text-amber-ink">{proof.lookupNote}</p>
+        <div className="flex items-start gap-2 border-b border-surface-line bg-amber-soft px-4 py-2.5">
+          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber" strokeWidth={2.4} />
+          <p className="text-[12.5px] leading-snug text-amber-ink">{proof.lookupNote}</p>
         </div>
       )}
 
-      <div className="divide-y divide-surface-line">
-        <Section
-          icon={BookMarked}
-          title="Evidence used"
-          tone="teal"
-          items={sourceItems}
-          empty="No grounding evidence attached."
-        />
-        {(backgroundCandidates.length > 0 || ignoredCandidates.length > 0) && (
-          <div className="space-y-1 px-4 py-2.5">
-            {backgroundCandidates.length > 0 && (
-              <div className="text-[13px] text-graphite-faint">
-                <span className="font-semibold text-graphite-muted">Background only</span> (not
-                relied on): {backgroundCandidates.map((c) => c.id).join(", ")}
-              </div>
-            )}
-            {ignoredCandidates.length > 0 && (
-              <div className="text-[13px] text-graphite-faint">
-                <span className="font-semibold text-coral-ink">Ignored</span> (off-topic / low
-                relevance, not counted): {ignoredCandidates.map((c) => c.id).join(", ")}
-              </div>
-            )}
-          </div>
-        )}
-        <Section icon={Sigma} title="Quantified checks" tone="teal" items={proof.quantChecks} />
-        <Section
-          icon={HelpCircle}
-          title="Assumptions surfaced"
-          tone="amber"
-          items={proof.assumptions}
-        />
-        <Section
-          icon={AlertTriangle}
-          title="Auditor warnings"
-          tone="coral"
-          items={proof.unsupportedWarnings}
-        />
-        <Section
-          icon={HelpCircle}
-          title="Open uncertainty — needs expert review"
-          tone="graphite"
-          items={proof.openUncertainty}
-          empty="No residual uncertainty flagged."
-        />
+      <div className="flex flex-col">
+        {rows.map((r, i) => {
+          const t = TONE[r.tone];
+          const Icon = t.Icon;
+          return (
+            <div
+              key={i}
+              className="flex items-start gap-2.5 border-t border-surface-line px-4 py-2.5 first:border-t-0"
+            >
+              <span className={`mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-sm ${t.wrap}`}>
+                <Icon className="h-2.5 w-2.5" strokeWidth={2.6} />
+              </span>
+              <span className="min-w-0 flex-1 text-[12.5px] leading-snug text-graphite-muted">
+                {r.text}
+              </span>
+              <span className="ml-1 mt-0.5 shrink-0 font-mono text-[10px] uppercase tracking-[0.05em] text-graphite-faint">
+                {r.tag}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
